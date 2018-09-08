@@ -48,14 +48,12 @@ class GildedRose {
 			decrementSellIn(item);
 
 			if (item.sellIn < 0) {
-				if (!equals(item, ITEM_AGED_BRIE)) {
-					if (!equals(item, ITEM_BACKSTAGE_PASSES)) {
-						decrementQualityIfPossible(item);
-					} else {
-						item.quality = 0;
-					}
-				} else {
+				if (equals(item, ITEM_AGED_BRIE)) {
 					incrementQualityIfPossible(item);
+				} else if (equals(item, ITEM_BACKSTAGE_PASSES)) {
+					item.quality = 0;
+				} else {
+					decrementQualityIfPossible(item);
 				}
 			}
 		}
