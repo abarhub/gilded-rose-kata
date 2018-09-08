@@ -1,18 +1,27 @@
 package com.gildedrose;
 
+import com.google.common.collect.ImmutableList;
+
+import java.util.Arrays;
+import java.util.List;
+
 class GildedRose {
 	private static final String ITEM_AGED_BRIE = "Aged Brie";
 	private static final String ITEM_BACKSTAGE_PASSES = "Backstage passes to a TAFKAL80ETC concert";
 	private static final String ITEM_SULFURAS = "Sulfuras, Hand of Ragnaros";
-	Item[] items;
+
+	private List<Item> items;
 
 	public GildedRose(Item[] items) {
-		this.items = items;
+		if(items==null){
+			throw new NullPointerException("Item est null");
+		}
+		this.items = Arrays.asList(items);
 	}
 
 	public void updateQuality() {
-		for (int i = 0; i < items.length; i++) {
-			updateQuality(items[i]);
+		for (Item item : items) {
+			updateQuality(item);
 		}
 	}
 
@@ -20,25 +29,20 @@ class GildedRose {
 		if (equals(item, ITEM_SULFURAS)) {
 			//on ne fait rien
 		} else {
-			if (!equals(item, ITEM_AGED_BRIE)
-					&& !equals(item, ITEM_BACKSTAGE_PASSES)) {
-				if (item.quality > 0) {
-					decrementQuality(item);
+			if (equals(item, ITEM_AGED_BRIE)) {
+				incrementQualityIfPossible(item);
+			} else if (equals(item, ITEM_BACKSTAGE_PASSES)) {
+				incrementQualityIfPossible(item);
+
+				if (item.sellIn < 11) {
+					incrementQualityIfPossible(item);
+				}
+
+				if (item.sellIn < 6) {
+					incrementQualityIfPossible(item);
 				}
 			} else {
-				if (item.quality < 50) {
-					incrementQuality(item);
-
-					if (equals(item, ITEM_BACKSTAGE_PASSES)) {
-						if (item.sellIn < 11) {
-							incrementQualityIfPossible(item);
-						}
-
-						if (item.sellIn < 6) {
-							incrementQualityIfPossible(item);
-						}
-					}
-				}
+				decrementQualityIfPossible(item);
 			}
 
 			decrementSellIn(item);
@@ -46,9 +50,7 @@ class GildedRose {
 			if (item.sellIn < 0) {
 				if (!equals(item, ITEM_AGED_BRIE)) {
 					if (!equals(item, ITEM_BACKSTAGE_PASSES)) {
-						if (item.quality > 0) {
-							decrementQuality(item);
-						}
+						decrementQualityIfPossible(item);
 					} else {
 						item.quality = 0;
 					}
@@ -56,6 +58,12 @@ class GildedRose {
 					incrementQualityIfPossible(item);
 				}
 			}
+		}
+	}
+
+	private void decrementQualityIfPossible(Item item) {
+		if (item.quality > 0) {
+			decrementQuality(item);
 		}
 	}
 
@@ -79,5 +87,9 @@ class GildedRose {
 
 	private void incrementQuality(Item item) {
 		item.quality = item.quality + 1;
+	}
+
+	public List<Item> getItems() {
+		return ImmutableList.copyOf(items);
 	}
 }

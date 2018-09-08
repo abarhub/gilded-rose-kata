@@ -11,7 +11,7 @@ public class GildedRoseTest {
 		Item[] items = new Item[] { new Item("foo", 0, 0) };
 		GildedRose app = new GildedRose(items);
 		app.updateQuality();
-		assertEquals("foo", app.items[0].name);
+		assertEquals("foo", app.getItems().get(0).name);
 	}
 
 	@Test
@@ -19,9 +19,10 @@ public class GildedRoseTest {
 		Item[] items = new Item[] { new Item("pomme", 10, 20) };
 		GildedRose app = new GildedRose(items);
 		app.updateQuality();
-		assertEquals("pomme", app.items[0].name);
-		assertEquals(9, app.items[0].sellIn);
-		assertEquals(19, app.items[0].quality);
+		Item item=app.getItems().get(0);
+		assertEquals("pomme", item.name);
+		assertEquals(9, item.sellIn);
+		assertEquals(19, item.quality);
 	}
 
 }
