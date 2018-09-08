@@ -28,10 +28,6 @@ public abstract class SpecializedItem {
 		}
 	}
 
-	protected boolean equals(Item item, String itemBackstagePasses) {
-		return item.name.equals(itemBackstagePasses);
-	}
-
 	protected void decrementSellIn(Item item) {
 		item.sellIn = item.sellIn - 1;
 	}
